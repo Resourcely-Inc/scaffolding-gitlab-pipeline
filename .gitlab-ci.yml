@@ -17,6 +17,8 @@ stages:
   - test
 
 variables:
+  # Overwrites the $TF_PLAN_DIRECTORY in https://github.com/Resourcely-Inc/resourcely-gitlab-template
+  # This is also used in the `plan` job as the directory to store the Terraform plan
   TF_PLAN_DIRECTORY: $CI_PROJECT_DIR
 
 include:
@@ -31,6 +33,9 @@ validate:
     - terraform init
   script:
     - terraform validate
+  cache:
+    paths:
+      - .terraform
 
 plan:
   stage: plan
@@ -42,6 +47,11 @@ plan:
   script:
     - terraform plan -out=$TF_PLAN_DIRECTORY/plan.tfplan
     - terraform show -json $TF_PLAN_DIRECTORY/plan.tfplan > plan.json
+  # Generated plans should be saved as artifacts so that the
+  # resourcely_guardrails job can validate them
   artifacts:
     paths:
-      - $TF_PLAN_DIRECTORY/*
+      - $TF_PLAN_DIRECTORY/plan.json
+  cache:
+    paths:
+      - .terraform
