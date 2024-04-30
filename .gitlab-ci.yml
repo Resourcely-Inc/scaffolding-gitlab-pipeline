@@ -1,0 +1,57 @@
+# This CI/CD configuration leverages the official Hashicorp Terraform Container Images
+# https://hub.docker.com/r/hashicorp/terraform/ to perform the following:
+# 1. Initialize a working directory containing Terraform configuration files
+# 2. Validate the Terraform configuration files
+# 3. Create a Terraform plan from the configuration
+
+# When a merge-request is created, after the plan stage completes, the Resourcely guardrail validation job
+# https://github.com/Resourcely-Inc/resourcely-gitlab-template is kickoff in the test stage and validates
+# the plan against your configured Resourcely guardrails
+
+# Requires the following private variables to be configured:
+# RESOURCELY_API_TOKEN: Your Resourcely API Token
+
+stages:
+  - validate
+  - plan
+  - test
+
+variables:
+  # Overwrites the $TF_PLAN_DIRECTORY in https://github.com/Resourcely-Inc/resourcely-gitlab-template
+  # This is also used in the `plan` job as the directory to store the Terraform plan
+  TF_PLAN_DIRECTORY: $CI_PROJECT_DIR
+
+include:
+  - remote: 'https://raw.githubusercontent.com/Resourcely-Inc/resourcely-gitlab-template/main/.resourcely.gitlab-ci.yml'
+
+validate:
+  stage: validate
+  image:
+    name: hashicorp/terraform:light
+    entrypoint: [""]
+  before_script:
+    - terraform init
+  script:
+    - terraform validate
+  cache:
+    paths:
+      - .terraform
+
+plan:
+  stage: plan
+  image:
+    name: hashicorp/terraform:light
+    entrypoint: [""]
+  before_script:
+    - terraform init
+  script:
+    - terraform plan -out=$TF_PLAN_DIRECTORY/plan.tfplan
+    - terraform show -json $TF_PLAN_DIRECTORY/plan.tfplan > plan.json
+  # Generated plans should be saved as artifacts so that the
+  # resourcely_guardrails job can validate them
+  artifacts:
+    paths:
+      - $TF_PLAN_DIRECTORY/plan.json
+  cache:
+    paths:
+      - .terraform
