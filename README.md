@@ -39,7 +39,7 @@ This repository uses GitLab CI/CD to run terraform plan. Once a plan is download
     g. Select the **Mask variable** to protect sensitive data from being seen in job logs  
     h. Unselect **Expand variable reference**  
     i. Press the **Add variable** button  
-5. Add your AWS credentials `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to GitLab following the same process in step 3
+5. Add your AWS credentials `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to GitLab following the same process in step 4
 6. [Provision Infrastructure using Resourcely](https://docs.resourcely.io/using-resourcely)
 
 Once a new Resource has been created via Merge-Request, the Resourcely job will automatically kick-off. It runs in the **test** stage by default.
