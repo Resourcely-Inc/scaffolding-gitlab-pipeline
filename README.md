@@ -26,9 +26,10 @@ This repository uses GitLab CI/CD to run terraform plan. Once a plan is download
     c. Select **Repository by URL**  
     d. Enter the **Git repository URL**: https://github.com/Resourcely-Inc/scaffolding-gitlab-pipeline.git  
     e. Complete the remaining fields  
-    f. Select **Create project**  
-2. [Generate a Resourcely API Token](https://docs.resourcely.io/onboarding/api-access-token-generation) and save it in a safe place
-3. Add your Resourcely API Token to your [GitLab project CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)  
+    f. Select **Create project**
+2. [Allow Resourcely to monitor the newly created project](https://docs.resourcely.io/onboarding/source-code-management-integration/gitlab#choosing-a-repository-for-resourcely-to-monitor)
+3. [Generate a Resourcely API Token](https://docs.resourcely.io/onboarding/api-access-token-generation) and save it in a safe place
+4. Add your Resourcely API Token to your [GitLab project CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)  
     a. Go to the GitLab project that Resourcely will validate  
     b. In the side tab, navigate to **Settings > CI/CD**  
     c. Expand the **Variables** tab  
@@ -38,8 +39,8 @@ This repository uses GitLab CI/CD to run terraform plan. Once a plan is download
     g. Select the **Mask variable** to protect sensitive data from being seen in job logs  
     h. Unselect **Expand variable reference**  
     i. Press the **Add variable** button  
-4. Add your AWS credentials `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to GitLab following the same process in step 3
-5. [Provision Infrastructure using Resourcely](https://docs.resourcely.io/using-resourcely)
+5. Add your AWS credentials `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to GitLab following the same process in step 3
+6. [Provision Infrastructure using Resourcely](https://docs.resourcely.io/using-resourcely)
 
 Once a new Resource has been created via Merge-Request, the Resourcely job will automatically kick-off. It runs in the **test** stage by default.
 
